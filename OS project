@@ -1,0 +1,155 @@
+// OSProject.cpp : This file contains the 'main' function. Program execution begins and ends there.
+//
+
+#include <iostream>
+using namespace std;
+void FirstFit(int noblocks,int* soblocks, int noprocesses, int* soprocesses) {
+	int* loc = new int[noprocesses];
+	for (int i = 0; i < noprocesses; i++) {
+		for (int j = 0; j < noblocks; j++) {
+			if (soblocks[j] >= soprocesses[i]) {
+				loc[i] = soblocks[j];
+				soblocks[j] -= loc[i];
+				break;
+			}
+			else {
+				loc[i] = 0;
+			}
+		}
+	}
+	cout << "|-------------------------------------|" << endl;
+	cout << "|      Process      |      Block      |" << endl;
+	cout << "|-------------------------------------|" << endl;
+	for (int x = 0; x < noprocesses; x++) {
+		if (loc[x] == 0) {
+			cout <<"         "<<soprocesses[x]<< "k       ==>  Not Allocated!  "<<endl<<endl;
+		}
+		else {
+			cout << "         " << soprocesses[x] << "k       ==>       "<<loc[x]<<"k         "<<endl<<endl;
+		}
+		/*cout << loc[x] << " ";*/
+	}
+	cout << "|-------------------------------------|" << endl;
+}
+void BestFit(int noblocks, int* soblocks, int noprocesses, int* soprocesses) {
+	int* loc = new int[noprocesses];
+	int min,n;
+	for (int i = 0; i < noprocesses; i++) {
+		min = 10000000,n=0;
+		for (int j = 0; j < noblocks; j++) {
+			if (soblocks[j] >= soprocesses[i] && soblocks[j] < min) {
+				min = soblocks[j];
+				n = j;
+			}
+		}
+		if (min == 10000000) {
+			loc[i] = 0;
+		}
+		else {
+			loc[i] = min;
+		}
+		soblocks[n] -= loc[i];
+	}
+	cout << "|-------------------------------------|" << endl;
+	cout << "|      Process      |      Block      |" << endl;
+	cout << "|-------------------------------------|" << endl;
+	for (int x = 0; x < noprocesses; x++) {
+		if (loc[x] == 0) {
+			cout << "         " << soprocesses[x] << "k       ==>  Not Allocated!  " << endl << endl;
+		}
+		else {
+			cout << "         " << soprocesses[x] << "k       ==>       " << loc[x] << "k         " << endl << endl;
+		}
+		/*cout << loc[x] << " ";*/
+	}
+	cout << "|-------------------------------------|" << endl;
+}
+void WorstFit(int noblocks, int* soblocks, int noprocesses, int* soprocesses) {
+	int* loc = new int[noprocesses];
+	int max, n;
+	for (int i = 0; i < noprocesses; i++) {
+		max = 0, n = 0;
+		for (int j = 0; j < noblocks; j++) {
+			if (soblocks[j] >= soprocesses[i] && soblocks[j] > max) {
+				max = soblocks[j];
+				n = j;
+			}
+		}
+		if (max == 0) {
+			loc[i] = 0;
+		}
+		else {
+			loc[i] = max;
+		}
+		soblocks[n] -= loc[i];
+	}
+	cout << "|-------------------------------------|" << endl;
+	cout << "|      Process      |      Block      |" << endl;
+	cout << "|-------------------------------------|" << endl;
+	for (int x = 0; x < noprocesses; x++) {
+		if (loc[x] == 0) {
+			cout << "         " << soprocesses[x] << "k       ==>  Not Allocated!  " << endl << endl;
+		}
+		else {
+			cout << "         " << soprocesses[x] << "k       ==>       " << loc[x] << "k         " << endl << endl;
+		}
+		/*cout << loc[x] << " ";*/
+	}
+	cout << "|-------------------------------------|" << endl;
+}
+int main()
+{
+	int noblocks;
+	cout << "Enter the total number of memory blocks" << endl;
+	cin >> noblocks;
+	int* soblocks = new int[noblocks];
+	cout << "Enter the block sizes" << endl;
+	for (int i = 0; i < noblocks; i++) {
+		cin >> soblocks[i];
+	}
+	int noprocesses;
+	cout << "Enter the number of processes" << endl;
+	cin >> noprocesses;
+	int* soprocesses = new int[noprocesses];
+	cout << "Enter the processes sizes" << endl;
+	for (int j = 0; j < noprocesses; j++) {
+		cin >> soprocesses[j];
+	}
+	int method;
+	cout << "Choose the allocation method" << endl;
+	cout << "1) First Fit\n2) Best Fit\n3) Worst Fit" << endl;
+	cin >> method;
+
+	/*int noblocks = 8, soblocks[8] = { 10, 4, 20, 18, 7, 9, 12, 15 },
+		noprocesses = 4, soprocesses[4] = { 12,10,9,17 },
+		method = 1;*/
+	system("CLS");
+	cout << endl << endl;
+	cout << "Blocks : ";
+	for (int x = 0; x < noblocks; x++) {
+		cout << soblocks[x] << "k  ";
+	}
+	cout << endl << endl;
+	cout << "Processes: ";
+	for (int y = 0; y < noprocesses; y++) {
+		cout << soprocesses[y] << "k  ";
+	}
+	cout << endl << endl;
+
+	if (method == 1) {
+		cout << "Allocation Method: First Fit" << endl << endl;
+		FirstFit(noblocks,soblocks,noprocesses,soprocesses);
+	}
+	else if (method == 2) {
+		cout << "Allocation Method: Best Fit" << endl << endl;
+		BestFit(noblocks, soblocks, noprocesses, soprocesses);
+	}
+	else if (method == 3) {
+		cout << "Allocation Method: Worst Fit" << endl << endl;
+		WorstFit(noblocks, soblocks, noprocesses, soprocesses);
+	}
+	else {
+		cout << "INCORRECT ENTRY" << endl;
+	}
+	cout << endl << endl;
+}
