@@ -6,5 +6,7 @@ processes amongst all. Which are First Fit, Best Fit and Worst
 Fit. Our purpose from this project is to provide all these 
 techniques to the user. 
 
+It's a Operating Systems II course project - MIU
+
 ### Language used:
 C++
